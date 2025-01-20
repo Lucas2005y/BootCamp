@@ -8,7 +8,7 @@ build-parameters:
   before-all:
     - builder: custom
       commands:
-        - npm ci
+        - npm install
         - npx cds build --production
 modules:
   - name: Dia17-srv
@@ -16,8 +16,6 @@ modules:
     path: gen/srv
     parameters:
       buildpack: nodejs_buildpack
-      readiness-health-check-type: http
-      readiness-health-check-http-endpoint: /health
     build-parameters:
       builder: npm
     provides:
@@ -26,14 +24,15 @@ modules:
           srv-url: ${default-url}
     requires:
       - name: Dia17-db
+      - name: dia17-auth
 
-  - name: Dia17-db-deployer
-    type: hdb
-    path: gen/db
-    parameters:
-      buildpack: nodejs_buildpack
-    requires:
-      - name: Dia17-db
+  # - name: Dia17-db-deployer
+  #   type: hdb
+  #   path: gen/db
+  #   parameters:
+  #     buildpack: nodejs_buildpack
+  #   requires:
+  #     - name: Dia17-db
 
 resources:
   - name: Dia17-db
@@ -41,3 +40,12 @@ resources:
     parameters:
       service: hana
       service-plan: hdi-shared
+  - name: dia17-auth
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-plan: application
+      path: ./xs-security.json
+      config:
+        xsappname: dia17-${org}-${space}
+        tenant-mode: dedicated

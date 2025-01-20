@@ -1,0 +1,23 @@
+
+
+{
+    
+    "[hybrid]": {
+        "requires": {
+            "db": {
+                "kind": "hana"
+            },
+            "auth": {
+                "kind": "basic-auth",
+                "users": {
+                    "admin": {
+                        "password": "admin"
+                    },
+                    "viewer": {
+                        "password": "viewer"
+                    }
+                }
+            }
+        }
+    }
+}

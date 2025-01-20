@@ -1,5 +1,5 @@
 {
-  "name": "Dia17",
+  "name": "dia17",
   "version": "1.0.0",
   "description": "A simple CAP project.",
   "repository": "<Add your repository here>",
@@ -7,7 +7,10 @@
   "private": true,
   "dependencies": {
     "@sap/cds": "^8",
-    "express": "^4"
+    "@sap/hana-client": "^2.23.24",
+    "@sap/xssec": "^4",
+    "express": "^4",
+    "sqlite3": "^5.1.7"
   },
   "scripts": {
     "start": "cds-serve"
@@ -15,6 +18,34 @@
   "cds": {
     "sql": {
       "native_hana_associations": false
+    },
+    "[production]": {
+        "requires": {
+            "db": {
+                "kind": "hana"
+            },
+            "auth": {
+                "kind": "xsuaa"
+            }
+        }
+    },
+    "[development]": {
+        "requires": {
+            "db": {
+                "kind": "hana"
+            },
+            "auth": {
+                "kind": "basic-auth",
+                "users": {
+                    "admin": {
+                        "password": "admin"
+                    },
+                    "viewer": {
+                        "password": "viewer"
+                    }
+                }
+            }
+        }
     }
   }
 }
